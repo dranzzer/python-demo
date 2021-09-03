@@ -36,8 +36,8 @@ else:
 		for row in res:
 			csv.writer(file).writerow(row)
 
-	
+
 
 	print("done")
 	#cursor close
-	cursor.close()		
+	cursor.close()

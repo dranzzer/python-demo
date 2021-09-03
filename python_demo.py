@@ -1,12 +1,42 @@
-import mysql.connector
+import sys
+import csv
+import pypyodbc as odbc
 
-db = mysql.connector.connect(host = "127.0.0.1", user = "root", passwd = "hehe")
+DRIVER = 'SQL Server'
+SERVER_NAME = 'DESKTOP-PGGF8L4'
+DATABASE_NAME = 'covid'
 
-cursor = db.cursor()
 
+conn_string = f"""
+	Driver={{{DRIVER}}};
+	Server={SERVER_NAME};
+	Database={DATABASE_NAME};
+	Trust_Connection=yes;
+"""
 
-#insert sql query
-cursor.execute("show databases")
+try:
+	conn = odbc.connect(conn_string)
+	print('we are here')
+except Exception as e:
+	print(e)
+	print('task is terminated')
+	sys.exit()
+else:
+	cursor = conn.cursor()
+	sql = "SELECT * FROM covid_deaths$"
 
-for i in cursor:
-	print(i)
+	#executing SQL
+
+	cursor.execute(sql)
+
+	#get result
+	res = cursor.fetchall()
+	with open ("new_filve.csv","w") as file:
+		for row in res:
+			csv.writer(file).writerow(row)
+
+	
+
+	print("done")
+	#cursor close
+	cursor.close()		

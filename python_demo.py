@@ -32,6 +32,7 @@ else:
 	#get result
 	res = cursor.fetchall()
 	with open ("new_file.csv","w", newline="") as file:
+		csv.writer(file).writerow(x[0] for x in cursor.description)
 		for row in res:
 			csv.writer(file).writerow(row)
 

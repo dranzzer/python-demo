@@ -23,7 +23,7 @@ except Exception as e:
 	sys.exit()
 else:
 	cursor = conn.cursor()
-	sql = "SELECT * FROM covid_deaths$"
+	sql = "SELECT * FROM dbo.covid_deaths ORDER BY location,date"
 
 	#executing SQL
 
@@ -31,7 +31,7 @@ else:
 
 	#get result
 	res = cursor.fetchall()
-	with open ("new_filve.csv","w") as file:
+	with open ("new_file.csv","w", newline="") as file:
 		for row in res:
 			csv.writer(file).writerow(row)
 

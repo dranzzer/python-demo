@@ -49,3 +49,4 @@ else:
     print('starting graph plot')
     print_data = pd.read_csv("report_" + start_date_range + "_to_" + end_date_range + ".csv")
     plt.plot(print_data.date,print_data.population)
+    plt.show()

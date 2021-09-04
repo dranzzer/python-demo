@@ -1,9 +1,9 @@
 import sys
 import csv
 import pypyodbc as odbc
-from ui import *
-from PyQt5.QtCore import QDate
-from datetime import datetime
+import pandas as pd
+from matplotlib import pyplot as plt
+
 
 
 DRIVER = 'SQL Server'
@@ -17,7 +17,9 @@ conn_string = f"""
 	Trust_Connection=yes;
 """
 global start_date_range
-start_date_range = 2020-01-01
+start_date_range = "2020-01-01"
+global end_date_range
+end_date_range = "2020-01-03"
 try:
     conn = odbc.connect(conn_string)
     print('connected to db succesfully')
@@ -43,3 +45,7 @@ else:
     print("Report Generated! :D")
     # cursor close
     cursor.close()
+
+    print('starting graph plot')
+    print_data = pd.read_csv("report_" + start_date_range + "_to_" + end_date_range + ".csv")
+    plt.plot(print_data.date,print_data.population)

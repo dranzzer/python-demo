@@ -1,3 +1,6 @@
+import sys
+import csv
+import pypyodbc as odbc
 from tkinter import *
 from tkcalendar import *
 from datetime import date
@@ -15,6 +18,37 @@ conn_string = f"""
 
 
 
+try:
+    conn = odbc.connect(conn_string)
+    print('connected to db succesfully')
+except Exception as e:
+    print(e)
+    print('task is terminated')
+    sys.exit()
+else:
+    def report_generator():
+        cursor = conn.cursor()
+        start_date_range = "2020-01-01"
+        end_date_range = "2020-01-01"
+        sql = "SELECT * FROM dbo.covid_deaths2 WHERE date >= '" + start_date_range + "' AND date <='" + end_date_range + "' ORDER BY location,date"
+
+        # executing SQL
+
+        cursor.execute(sql)
+
+        # get result
+        res = cursor.fetchall()
+        with open("report_" + start_date_range + "_to_" + end_date_range + ".csv", "w", newline="") as file:
+            csv.writer(file).writerow(x[0] for x in cursor.description)
+            for row in res:
+                csv.writer(file).writerow(row)
+
+        print("Report Generated! :D")
+        # cursor close
+        cursor.close()
+
+
+
 window = Tk()
 window.title('Generator')
 window.geometry("557x400")
@@ -25,12 +59,6 @@ def range_update(e):
     label.config(text=user_date_output)
 
 
-def grab_date():
-
-    start_date_ui = cal1.get_date()
-    end_date_ui = cal2.get_date()
-    user_date_output = "Your current report will be generated from "+ start_date_ui +" to " + end_date_ui
-    label.config(text=user_date_output)
 
 
 
@@ -46,7 +74,7 @@ cal2.bind("<<CalendarSelected>>", range_update)
 
 
 
-button = Button(window,text="get date",command=grab_date)
+button = Button(window,text="get date",command=report_generator)
 button.grid(row=4,column=1)
 
 label = Label(window,text="Your current report will be generated from 2020-01-01 to 2020-08-29")

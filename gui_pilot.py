@@ -3,7 +3,7 @@ import csv
 import pypyodbc as odbc
 from tkinter import *
 from tkcalendar import *
-from datetime import date
+from datetime import *
 #DB connection!
 DRIVER = 'SQL Server'
 SERVER_NAME = 'DESKTOP-PGGF8L4'
@@ -53,10 +53,13 @@ window = Tk()
 window.title('Generator')
 window.geometry("557x400")
 def range_update(e):
-    start_date_ui = cal1.get_date()
-    end_date_ui = cal2.get_date()
-    user_date_output = "Your current report will be generated from " + start_date_ui + " to " + end_date_ui
+    format = "%m/%d/%y"
+    string_start_date = datetime.strptime(cal1.get_date(), format).strftime("%Y-%m-%d")
+    string_end_date = datetime.strptime(cal2.get_date(), format).strftime("%Y-%m-%d")
+    user_date_output = "Your current report will be generated from " + string_start_date + " to " + string_end_date
     label.config(text=user_date_output)
+
+
 
 
 

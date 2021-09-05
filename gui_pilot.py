@@ -54,6 +54,8 @@ window.title('Generator')
 window.geometry("557x400")
 def range_update(e):
     format = "%m/%d/%y"
+    global string_start_date
+    global string_end_date
     string_start_date = datetime.strptime(cal1.get_date(), format).strftime("%Y-%m-%d")
     string_end_date = datetime.strptime(cal2.get_date(), format).strftime("%Y-%m-%d")
     user_date_output = "Your current report will be generated from " + string_start_date + " to " + string_end_date

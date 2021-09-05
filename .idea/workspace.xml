@@ -3,12 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2d6f3419-f4b1-4e98-ba6d-981bd8f692f6" name="Changes" comment="fixed graph not showing - forgot show method">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gui_pilot.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui_pilot.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/report_2020-01-01_to_2020-01-01.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/report_2020-01-01_to_2020-01-03.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/report_2020-01-01_to_2021-08-29.csv" beforeDir="false" afterPath="$PROJECT_DIR$/report_2020-01-01_to_2021-08-29.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/report_2020-1-1_to_2020-3-1.csv" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +31,7 @@
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.gui_pilot">
+  <component name="RunManager" selected="Python.main">
     <configuration name="calendar_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="pythondemo2" />
       <option name="INTERPRETER_OPTIONS" value="" />

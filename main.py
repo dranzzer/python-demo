@@ -80,7 +80,7 @@ else:
 
     window = Tk()
     window.title('Generator')
-    window.geometry("557x400")
+    window.geometry("600x300")
 
 cal1 = Calendar(window, selectmode="day", year=2020, month=1, day=1, mindate=date(2020, 1, 1),
                 maxdate=date(2021, 8, 29))
@@ -91,13 +91,13 @@ cal2.grid(row=1, column=2)
 cal1.bind("<<CalendarSelected>>", range_update)
 cal2.bind("<<CalendarSelected>>", range_update)
 
-button = Button(window, text="get date", command=report_generator)
+button = Button(window, text="Generate Report", command=report_generator)
 button.grid(row=4, column=1)
 
 label = Label(window, text="Your current report will be generated from 2020-01-01 to 2020-08-29")
 label.grid(row=3, column=0, columnspan=3)
 Label(window, text="Start Date :").grid(row=0, column=0)
-Label(window, text="Start Date :").grid(row=0, column=2)
+Label(window, text="End Date :").grid(row=0, column=2)
 
 window.resizable(False, False)
 window.mainloop()

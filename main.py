@@ -1,11 +1,12 @@
 import sys
 import csv
 import pypyodbc as odbc
-from ui import *
-from PyQt5.QtCore import QDate
-from datetime import datetime
+from tkinter import *
+from tkinter import messagebox
+from tkcalendar import *
+from datetime import *
 
-
+# DB connection!
 DRIVER = 'SQL Server'
 SERVER_NAME = 'DESKTOP-PGGF8L4'
 DATABASE_NAME = 'covid'
@@ -25,85 +26,78 @@ except Exception as e:
     print('task is terminated')
     sys.exit()
 else:
-
-    class FirstApp(Ui_MainWindow):
-        def __init__(self, window):
-            self.setupUi(window)
-            self.button1.clicked.connect(self.generate_report)
-
-
-            self.startdate.clicked.connect(self.startdatefunc)
-            self.startdate.setMinimumDate(QDate(2020,1,1))
-            self.startdate.setMaximumDate(QDate(2021, 8, 29))
-            self.startdate.setSelectedDate(QDate(2020, 1, 1))
+    global string_start_date
+    string_start_date = "2020-01-01"
+    global string_end_date
+    string_end_date = "2021-08-29"
 
 
+    def range_update(e):
+        format = "%m/%d/%y"
 
-            self.enddate.clicked.connect(self.enddatefunc)
-            self.enddate.setMinimumDate(QDate(2020, 1, 1))
-            self.enddate.setMaximumDate(QDate(2021, 8, 29))
-            self.enddate.setSelectedDate(QDate(2021, 8, 29))
+        string_start_date = datetime.strptime(cal1.get_date(), format).strftime("%Y-%m-%d")
+        string_end_date = datetime.strptime(cal2.get_date(), format).strftime("%Y-%m-%d")
 
-            global start_date_range
-            start_date_range = "2020-01-01"
-            global end_date_range
-            end_date_range = "2021-08-29"
+        if cal1.get_date() > cal2.get_date():
+            global user_date_output
+            user_date_output = "Warning! Starting Date Cannot be after Ending Date!"
+            messagebox.showwarning('ERROR',
+                                   'Start Date cannot be after End Date! Report will not generate with incorrect parameters!')
+        else:
+            user_date_output = "Your current report will be generated from " + string_start_date + " to " + string_end_date
 
-
-
-
-
-        def startdatefunc(self, qDate):
-
-            global start_date_range
-            start_date_range = '{0}-{1}-{2}'.format(qDate.year(), qDate.month(), qDate.day())
-
-        def enddatefunc(self, qDate):
-            global end_date_range
-            end_date_range = '{0}-{1}-{2}'.format(qDate.year(), qDate.month(), qDate.day())
+        label.config(text=user_date_output)
 
 
+    def report_generator():
+        format = "%m/%d/%y"
+        string_start_date = datetime.strptime(cal1.get_date(), format).strftime("%Y-%m-%d")
+        string_end_date = datetime.strptime(cal2.get_date(), format).strftime("%Y-%m-%d")
 
+        if cal1.get_date() > cal2.get_date():
+            messagebox.showwarning('ERROR', 'Start Date cannot be after End Date! Report is not generated :(')
 
-        def generate_report(self):
+        else:
             cursor = conn.cursor()
+            sql = "SELECT * FROM dbo.covid_deaths2 WHERE date >= '" + string_start_date + "' AND date <='" + string_end_date + "' ORDER BY location,date"
 
-            if datetime.strptime(start_date_range, '%Y-%m-%d') <= datetime.strptime(end_date_range,'%Y-%m-%d'):
+            # executing SQL
 
-                sql = "SELECT * FROM dbo.covid_deaths2 WHERE date >= '" + start_date_range + "' AND date <='" + end_date_range + "' ORDER BY location,date"
+            cursor.execute(sql)
 
+            # get result
+            res = cursor.fetchall()
+            with open("report_" + string_start_date + "_to_" + string_end_date + ".csv", "w", newline="") as file:
+                csv.writer(file).writerow(x[0] for x in cursor.description)
+                for row in res:
+                    csv.writer(file).writerow(row)
 
-                # executing SQL
-
-                cursor.execute(sql)
-
-                # get result
-                res = cursor.fetchall()
-                with open("report_"+start_date_range+"_to_"+end_date_range+".csv", "w", newline="") as file:
-                    csv.writer(file).writerow(x[0] for x in cursor.description)
-                    for row in res:
-                        csv.writer(file).writerow(row)
-
-                print("Report Generated! :D")
-                # cursor close
-                cursor.close()
-            else:
-                print("Please check date range - End Date cannot be before the start!")
-                print("Report not generated :(")
-                cursor.close()
+            print("Report Generated! :D")
+            # cursor close
+            cursor.close()
+            messagebox.showinfo('SUCCESS', 'Report has been generated! Please check root directory!!')
 
 
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
+    window = Tk()
+    window.title('Generator')
+    window.geometry("557x400")
 
-    # create instance of app
-    ui = FirstApp(MainWindow)
+cal1 = Calendar(window, selectmode="day", year=2020, month=1, day=1, mindate=date(2020, 1, 1),
+                maxdate=date(2021, 8, 29))
+cal2 = Calendar(window, selectmode="day", year=2021, month=8, day=29, mindate=date(2020, 1, 1),
+                maxdate=date(2021, 8, 29))
+cal1.grid(row=1, column=0)
+cal2.grid(row=1, column=2)
+cal1.bind("<<CalendarSelected>>", range_update)
+cal2.bind("<<CalendarSelected>>", range_update)
 
-    # window and start app
-    MainWindow.show()
-    app.exec_()
+button = Button(window, text="get date", command=report_generator)
+button.grid(row=4, column=1)
 
+label = Label(window, text="Your current report will be generated from 2020-01-01 to 2020-08-29")
+label.grid(row=3, column=0, columnspan=3)
+Label(window, text="Start Date :").grid(row=0, column=0)
+Label(window, text="Start Date :").grid(row=0, column=2)
 
-
-
-
+window.resizable(False, False)
+window.mainloop()

@@ -2,6 +2,7 @@ import sys
 import csv
 import pypyodbc as odbc
 from tkinter import *
+from tkinter import messagebox
 from tkcalendar import *
 from datetime import *
 #DB connection!
@@ -18,6 +19,8 @@ conn_string = f"""
 
 
 
+
+
 try:
     conn = odbc.connect(conn_string)
     print('connected to db succesfully')
@@ -26,42 +29,61 @@ except Exception as e:
     print('task is terminated')
     sys.exit()
 else:
-    def report_generator():
-        cursor = conn.cursor()
-        start_date_range = "2020-01-01"
-        end_date_range = "2020-01-01"
-        sql = "SELECT * FROM dbo.covid_deaths2 WHERE date >= '" + start_date_range + "' AND date <='" + end_date_range + "' ORDER BY location,date"
-
-        # executing SQL
-
-        cursor.execute(sql)
-
-        # get result
-        res = cursor.fetchall()
-        with open("report_" + start_date_range + "_to_" + end_date_range + ".csv", "w", newline="") as file:
-            csv.writer(file).writerow(x[0] for x in cursor.description)
-            for row in res:
-                csv.writer(file).writerow(row)
-
-        print("Report Generated! :D")
-        # cursor close
-        cursor.close()
-
-
-
-window = Tk()
-window.title('Generator')
-window.geometry("557x400")
-def range_update(e):
-    format = "%m/%d/%y"
     global string_start_date
+    string_start_date = "2020-01-01"
     global string_end_date
-    string_start_date = datetime.strptime(cal1.get_date(), format).strftime("%Y-%m-%d")
-    string_end_date = datetime.strptime(cal2.get_date(), format).strftime("%Y-%m-%d")
-    user_date_output = "Your current report will be generated from " + string_start_date + " to " + string_end_date
-    label.config(text=user_date_output)
+    string_end_date = "2021-08-29"
 
 
+    def range_update(e):
+        format = "%m/%d/%y"
+
+        string_start_date = datetime.strptime(cal1.get_date(), format).strftime("%Y-%m-%d")
+        string_end_date = datetime.strptime(cal2.get_date(), format).strftime("%Y-%m-%d")
+
+        if cal1.get_date() > cal2.get_date():
+            global user_date_output
+            user_date_output = "Warning! Starting Date Cannot be after Ending Date!"
+            messagebox.showwarning('ERROR','Start Date cannot be after End Date! Report will not generate with incorrect parameters!')
+        else:
+            user_date_output = "Your current report will be generated from " + string_start_date + " to " + string_end_date
+
+        label.config(text=user_date_output)
+
+
+    def report_generator():
+        format = "%m/%d/%y"
+        string_start_date = datetime.strptime(cal1.get_date(), format).strftime("%Y-%m-%d")
+        string_end_date = datetime.strptime(cal2.get_date(), format).strftime("%Y-%m-%d")
+
+        if cal1.get_date()>cal2.get_date():
+            messagebox.showwarning('ERROR','Start Date cannot be after End Date! Report is not generated :(')
+
+        else:
+            cursor = conn.cursor()
+            sql = "SELECT * FROM dbo.covid_deaths2 WHERE date >= '" + string_start_date + "' AND date <='" + string_end_date + "' ORDER BY location,date"
+
+            # executing SQL
+
+            cursor.execute(sql)
+
+            # get result
+            res = cursor.fetchall()
+            with open("report_" + string_start_date + "_to_" + string_end_date + ".csv", "w", newline="") as file:
+                csv.writer(file).writerow(x[0] for x in cursor.description)
+                for row in res:
+                    csv.writer(file).writerow(row)
+
+            print("Report Generated! :D")
+            # cursor close
+            cursor.close()
+            messagebox.showinfo('SUCCESS', 'Report has been generated! Please check root directory!!')
+
+
+
+    window = Tk()
+    window.title('Generator')
+    window.geometry("557x400")
 
 
 

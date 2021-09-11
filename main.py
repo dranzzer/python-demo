@@ -80,43 +80,52 @@ else:
 
     window = Tk()
     window.title('Generator')
-    window.geometry("600x300")
+    window.geometry("800x300")
 
 cal1 = Calendar(window, selectmode="day", year=2020, month=1, day=1, mindate=date(2020, 1, 1),
                 maxdate=date(2021, 8, 29))
 cal2 = Calendar(window, selectmode="day", year=2021, month=8, day=29, mindate=date(2020, 1, 1),
                 maxdate=date(2021, 8, 29))
-cal1.grid(row=1, column=0)
-cal2.grid(row=1, column=2)
+cal1.grid(row=1, column=0,columnspan = 3)
+cal2.grid(row=1, column=5,columnspan = 3)
 cal1.bind("<<CalendarSelected>>", range_update)
 cal2.bind("<<CalendarSelected>>", range_update)
 
 button = Button(window, text="Generate Report", command=report_generator)
-button.grid(row=3, column=1)
+button.grid(row=4, column=1)
 
 
 
 #labels
 label = Label(window, text="Your current report will be generated from 2020-01-01 to 2020-08-29")
-label.grid(row=2, column=0, columnspan=3)
+label.grid(row=2, column=0, columnspan=7)
 Label(window, text="Start Date :").grid(row=0, column=0)
-Label(window, text="End Date :").grid(row=0, column=2)
+Label(window, text="End Date :").grid(row=0, column=4)
+#Label(windor,text="spacer").grid(row=1,column=)
 
 
-button1 =IntVar()
-button2 = IntVar()
+continent_main_button =StringVar()
+
 
 #Radio Buttons
 
-continent_button1 = Radiobutton(window, text = 'test', variable = button1,value=1)
-continent_button2 = Radiobutton(window, text = 'test2', variable = button2,value=2)
-continent_button3 = Radiobutton(window, text = 'test3', variable = button2,value=3,command=lambda:print(var1.get()))
+continent_button1 = Radiobutton(window, text = 'World', variable = continent_main_button,value="WORLD",command=lambda:print(continent_main_button.get()))
+continent_button2 = Radiobutton(window, text = 'Africa', variable = continent_main_button,value="AFRICA",command=lambda:print(continent_main_button.get()))
+continent_button3 = Radiobutton(window, text = 'Asia', variable = continent_main_button,value="ASIA",command=lambda:print(continent_main_button.get()))
+continent_button4 = Radiobutton(window, text = 'Europe', variable = continent_main_button,value="EUROPE",command=lambda:print(continent_main_button.get()))
+continent_button5 = Radiobutton(window, text = 'North America', variable = continent_main_button,value="NORTH AMERICA",command=lambda:print(continent_main_button.get()))
+continent_button6 = Radiobutton(window, text = 'Oceania', variable = continent_main_button,value="OCEANIA",command=lambda:print(continent_main_button.get()))
+continent_button7 = Radiobutton(window, text = 'South America', variable = continent_main_button,value="SOUTH AMERICA",command=lambda:print(continent_main_button.get()))
 
-continent_button1.grid(column=0,row=4)
-continent_button2.grid(column=1,row=4)
-continent_button3.grid(column=2,row=4)
-continent_button3.select()
-print("Current value is "+str(var1.get()))
+continent_button1.grid(column=0,row=3)
+continent_button2.grid(column=1,row=3)
+continent_button3.grid(column=2,row=3)
+continent_button4.grid(column=3,row=3)
+continent_button5.grid(column=4,row=3)
+continent_button6.grid(column=5,row=3)
+continent_button7.grid(column=6,row=3)
+continent_button1.select()
+print("Current value is "+continent_main_button.get())
 
 window.resizable(False, False)
 window.mainloop()

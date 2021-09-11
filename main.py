@@ -92,12 +92,31 @@ cal1.bind("<<CalendarSelected>>", range_update)
 cal2.bind("<<CalendarSelected>>", range_update)
 
 button = Button(window, text="Generate Report", command=report_generator)
-button.grid(row=4, column=1)
+button.grid(row=3, column=1)
 
+
+
+#labels
 label = Label(window, text="Your current report will be generated from 2020-01-01 to 2020-08-29")
-label.grid(row=3, column=0, columnspan=3)
+label.grid(row=2, column=0, columnspan=3)
 Label(window, text="Start Date :").grid(row=0, column=0)
 Label(window, text="End Date :").grid(row=0, column=2)
+
+
+button1 =IntVar()
+button2 = IntVar()
+
+#Radio Buttons
+
+continent_button1 = Radiobutton(window, text = 'test', variable = button1,value=1)
+continent_button2 = Radiobutton(window, text = 'test2', variable = button2,value=2)
+continent_button3 = Radiobutton(window, text = 'test3', variable = button2,value=3,command=lambda:print(var1.get()))
+
+continent_button1.grid(column=0,row=4)
+continent_button2.grid(column=1,row=4)
+continent_button3.grid(column=2,row=4)
+continent_button3.select()
+print("Current value is "+str(var1.get()))
 
 window.resizable(False, False)
 window.mainloop()
